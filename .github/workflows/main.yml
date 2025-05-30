@@ -41,8 +41,7 @@ jobs:
             -Dsonar.projectKey=sofiani02_tp-devops-correction-docker \
             -Dsonar.organization=sofiani02 \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.token=$SONAR_TOKEN \
-            -f pom.xml
+            -Dsonar.token=$SONAR_TOKEN 
 
   build-and-push-docker:
     name: Build & Push Docker Images
