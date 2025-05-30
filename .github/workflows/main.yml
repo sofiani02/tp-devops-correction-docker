@@ -54,7 +54,10 @@ jobs:
             -Dsonar.projectKey=sofiani02_tp-devops-correction-docker \
             -Dsonar.organization=sofiani02 \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.token=$SONAR_TOKEN \
+            --file ./simple-api/pom.xml
+
+
 
   build-and-push-docker:
     name: Build & Push Docker Images
@@ -89,4 +92,3 @@ jobs:
           context: ./http-server
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
           push: true
-#hello
