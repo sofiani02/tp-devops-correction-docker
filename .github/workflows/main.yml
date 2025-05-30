@@ -27,7 +27,7 @@ jobs:
       - name: Build and test with Maven
         run: mvn clean verify --file ./simple-api/pom.xml
 
-    build-and-push-docker:
+  build-and-push-docker:
     needs: test-backend
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
@@ -44,4 +44,3 @@ jobs:
           context: ./simple-api
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
           push: true
-
