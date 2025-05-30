@@ -24,21 +24,20 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      # Exécution du build et des tests dans le dossier simple-api
       - name: Build and test with Maven
         working-directory: simple-api
         run: mvn clean verify
 
-      # Analyse SonarCloud dans le même dossier
       - name: Analyze with SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         working-directory: simple-api
-        run: mvn -B verify sonar:sonar \
-          -Dsonar.projectKey=tp-devops-simple-api \
-          -Dsonar.organization=sofiani02-org \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=$SONAR_TOKEN
+        run: |
+          mvn -B verify sonar:sonar \
+            -Dsonar.projectKey=tp-devops-simple-api \
+            -Dsonar.organization=sofiani02-org \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=$SONAR_TOKEN
 
   build-and-push-docker:
     needs: test-backend
@@ -49,7 +48,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Login to DockerHub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" \
+          | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Build & push backend image
         uses: docker/build-push-action@v6
