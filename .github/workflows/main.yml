@@ -24,18 +24,21 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
+      # Exécution du build et des tests dans le dossier simple-api
       - name: Build and test with Maven
-        run: mvn clean verify --file ./simple-api/pom.xml
+        working-directory: simple-api
+        run: mvn clean verify
 
+      # Analyse SonarCloud dans le même dossier
       - name: Analyze with SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: simple-api
         run: mvn -B verify sonar:sonar \
           -Dsonar.projectKey=tp-devops-simple-api \
           -Dsonar.organization=sofiani02-org \
           -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=$SONAR_TOKEN \
-          --file ./simple-api/pom.xml
+          -Dsonar.login=$SONAR_TOKEN
 
   build-and-push-docker:
     needs: test-backend
