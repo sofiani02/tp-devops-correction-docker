@@ -27,6 +27,16 @@ jobs:
       - name: Build and test with Maven
         run: mvn clean verify --file ./simple-api/pom.xml
 
+      - name: Analyze with SonarCloud
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify sonar:sonar \
+          -Dsonar.projectKey=tp-devops-simple-api \
+          -Dsonar.organization=sofiani02-org \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=$SONAR_TOKEN \
+          --file ./simple-api/pom.xml
+
   build-and-push-docker:
     needs: test-backend
     if: github.ref == 'refs/heads/main'
@@ -36,9 +46,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Login to DockerHub
-        run: |
-          echo "${{ secrets.DOCKERHUB_TOKEN }}" \
-            | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Build & push backend image
         uses: docker/build-push-action@v6
