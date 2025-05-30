@@ -28,6 +28,13 @@ jobs:
         working-directory: simple-api
         run: mvn clean verify
 
+      # ───────────────────────────────────────────────────────
+      # Analyse SonarCloud pour Quality Gate
+      #
+      # Organisation SonarCloud : sofiani02-org
+      # Clé de projet          : tp-devops-simple-api
+      # Nouvelle définition du code : 30 derniers jours
+      #
       - name: Analyze with SonarCloud
         working-directory: simple-api
         env:
@@ -38,6 +45,7 @@ jobs:
             -Dsonar.organization=sofiani02-org \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
+      # ───────────────────────────────────────────────────────
 
   build-and-push-docker:
     needs: test-backend
