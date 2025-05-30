@@ -11,7 +11,7 @@ on:
       - develop
 
 jobs:
-  build-and-analyze:
+  test-backend:
     name: Build, Test & SonarCloud
     runs-on: ubuntu-latest
     steps:
@@ -26,19 +26,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-
-      - name: Cache Maven local repository
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/simple-api/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
 
       - name: Build and test with Maven
         working-directory: simple-api
@@ -55,13 +42,11 @@ jobs:
             -Dsonar.organization=sofiani02 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=$SONAR_TOKEN \
-            --file ./simple-api/pom.xml
-
-
+            -f pom.xml
 
   build-and-push-docker:
     name: Build & Push Docker Images
-    needs: build-and-analyze
+    needs: test-backend
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
